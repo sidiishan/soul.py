@@ -1,5 +1,7 @@
 # soul.py 🧠
 
+**[▶ Live Demo](https://soul.themenonlab.com)** — watch memory persist in real time, no install needed.
+
 **Your AI forgets everything when the conversation ends. soul.py fixes that in 10 lines.**
 
 ```python
@@ -18,6 +20,12 @@ agent.ask("What do you know about me?")
 No database. No server. No vector embeddings. Just markdown files.
 
 ---
+
+## Try It First
+
+**[▶ Live Demo →](https://soul.themenonlab.com)**
+
+Chat with an agent and watch MEMORY.md grow in real time. No install, no API key.
 
 ## Install
 
