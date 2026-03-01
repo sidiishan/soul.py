@@ -1,5 +1,9 @@
 # soul.py 🧠
 
+[![PyPI version](https://img.shields.io/pypi/v/soul-agent.svg)](https://pypi.org/project/soul-agent/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/soul-agent.svg)](https://pypi.org/project/soul-agent/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Your AI forgets everything when the conversation ends. soul.py fixes that.**
 
 ```python
@@ -32,7 +36,7 @@ No database. No server. Just markdown files and smart retrieval.
 ## Install
 
 ```bash
-pip install soul-agent          # core (zero deps)
+pip install soul-agent
 pip install soul-agent[anthropic]
 pip install soul-agent[openai]
 ```
