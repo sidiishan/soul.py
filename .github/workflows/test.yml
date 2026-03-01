@@ -13,15 +13,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: pip install pytest
+      - run: pip install pytest requests
       - run: pytest tests/ -v --tb=short
-        # Unit tests mock the LLM client — no SDK or API key needed
 
   e2e:
-    # Only runs on merge to main, requires ANTHROPIC_API_KEY secret
-    # Set via: GitHub repo → Settings → Secrets → Actions → New secret
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && secrets.ANTHROPIC_API_KEY != ''
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -29,5 +26,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install anthropic
-      - run: python examples/basic.py
+      - run: pip install requests anthropic
+      - run: PYTHONPATH=. python examples/basic.py
