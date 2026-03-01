@@ -1,158 +1,147 @@
 # soul.py 🧠
 
-**[▶ Live Demo](https://soul.themenonlab.com)** — watch memory persist in real time, no install needed.
-
-**Your AI forgets everything when the conversation ends. soul.py fixes that in 10 lines.**
+**Your AI forgets everything when the conversation ends. soul.py fixes that.**
 
 ```python
-from soul import Agent
+from hybrid_agent import HybridAgent
 
-agent = Agent()
+agent = HybridAgent()
 agent.ask("My name is Prahlad and I'm building an AI research lab.")
-# → "That's exciting — what are you working on first?"
 
-# Later. New process. New session. Memory persists.
-agent = Agent()
-agent.ask("What do you know about me?")
+# New process. New session. Memory persists.
+agent = HybridAgent()
+result = agent.ask("What do you know about me?")
+print(result["answer"])
 # → "You're Prahlad, building an AI research lab."
 ```
 
-No database. No server. No vector embeddings. Just markdown files.
+No database. No server. Just markdown files and smart retrieval.
 
 ---
 
-## Try It First
+## ▶ Live Demos
 
-**[▶ Live Demo →](https://soul.themenonlab.com)**
+| Version | Demo | What it shows |
+|---|---|---|
+| v0.1 | [soul.themenonlab.com](https://soul.themenonlab.com) | Memory persists across sessions |
+| v1.0 | [soul-v1.themenonlab.com](https://soul-v1.themenonlab.com) | Semantic RAG retrieval |
+| v2.0 | [soul-v2.themenonlab.com](https://soul-v2.themenonlab.com) | Auto query routing: RAG + RLM |
 
-Chat with an agent and watch MEMORY.md grow in real time. No install, no API key.
+---
 
 ## Install
 
 ```bash
-pip install soul-agent          # zero required deps
-pip install soul-agent[anthropic]   # + Anthropic SDK
-pip install soul-agent[openai]      # + OpenAI SDK
+pip install soul-agent          # core (zero deps)
+pip install soul-agent[anthropic]
+pip install soul-agent[openai]
 ```
 
 ## Quickstart
 
 ```bash
-soul init   # interactive setup — creates SOUL.md and MEMORY.md
+soul init   # creates SOUL.md and MEMORY.md
 ```
 
-Or manually:
-
 ```python
+# v0.1 — simple markdown memory (great starting point)
 from soul import Agent
-
-# Anthropic (default)
 agent = Agent(provider="anthropic")
+agent.ask("Remember this.")
 
-# OpenAI
-agent = Agent(provider="openai")
-
-# Local Ollama — no API key needed
-agent = Agent(provider="openai-compatible", base_url="http://localhost:11434/v1", model="llama3.2", api_key="ollama")
-```
-
-## How it works
-
-soul.py uses two markdown files as the agent's persistent state:
-
-| File | Purpose |
-|------|---------|
-| `SOUL.md` | Identity — who the agent is, how it behaves, what it cares about |
-| `MEMORY.md` | Memory — timestamped log of past exchanges, manually added notes |
-
-On every `agent.ask()` call:
-1. `SOUL.md` + `MEMORY.md` are injected into the system prompt
-2. The LLM responds in character, with full memory context
-3. The exchange is appended to `MEMORY.md` with a timestamp
-
-That's it. No embeddings. No vector store. No infrastructure.
-
-## API
-
-```python
-agent.ask(question, remember=True)   # ask + persist to memory
-agent.remember(note)                  # manually write a note to MEMORY.md
-agent.reset_conversation()            # clear in-session history (not MEMORY.md)
-```
-
-## Example SOUL.md
-
-```markdown
-# SOUL.md
-You are Pi, an AI research assistant for Dr. Prahlad Menon.
-You are direct, curious, and think independently.
-You remember everything and build on prior conversations.
-You have opinions — you share them when relevant.
-```
-
-## Example MEMORY.md
-
-```markdown
-# MEMORY.md
-
-## 2026-03-01 08:30
-Q: My name is Prahlad and I'm working on a paper about agent memory.
-A: Great — persistent memory is one of the most underserved problems in agent design...
-
-## 2026-03-01 09:15
-Q: What do you think the key insight should be?
-A: The distinction between episodic and semantic memory matters more than most...
+# v2.0 — automatic RAG + RLM routing (this repo's default)
+from hybrid_agent import HybridAgent
+agent = HybridAgent()  # auto-detects best retrieval per query
+result = agent.ask("What do you know about me?")
+print(result["answer"])
+print(result["route"])   # "RAG" or "RLM"
 ```
 
 ---
 
-## Roadmap
+## How it works
 
-soul.py is designed to grow with your needs without changing your code.
+soul.py uses two markdown files as persistent state:
 
-### v0.1 — Now
-- Markdown-native memory, zero infrastructure
-- Anthropic, OpenAI, Ollama support
-- `soul init` wizard
+| File | Purpose |
+|---|---|
+| `SOUL.md` | Identity — who the agent is, how it behaves |
+| `MEMORY.md` | Memory — timestamped log of every exchange |
 
-### v1.0 — RAG backend
-- Local vector store (ChromaDB / FAISS) for large memory files
-- Same `agent.ask()` API — retrieval is invisible
-- Handles memory files with thousands of entries
+**v2.0 adds a query router** that automatically dispatches to the right retrieval strategy:
 
-### v2.0 — RAG + RLM hybrid
-- Query router: focused queries → RAG, exhaustive queries → RLM
-- Based on: [RAG + RLM: The Complete Knowledge Base Architecture](https://blog.themenonlab.com/blog/rag-plus-rlm-complete-knowledge-base-architecture)
-- External vector store support: Pinecone, Weaviate, Qdrant — no local compute required
-- `agent = Agent("SOUL.md", memory_backend="pinecone")`
+```
+Your query
+    ↓
+Router (fast LLM call)
+    ├── FOCUSED  (~90%) → RAG — vector search, sub-second
+    └── EXHAUSTIVE (~10%) → RLM — recursive synthesis, thorough
+```
 
-The key insight from the RAG + RLM architecture: ~90% of memory queries are focused lookups (RAG). The other 10% — *"what patterns appear across all my decisions?"* — require exhaustive reasoning (RLM). The router dispatches automatically.
+Architecture based on: [RAG + RLM: The Complete Knowledge Base Architecture](https://blog.themenonlab.com/blog/rag-plus-rlm-complete-knowledge-base-architecture)
+
+---
+
+## Branches
+
+| Branch | Description | Best for |
+|---|---|---|
+| `main` | v2.0 — RAG + RLM hybrid (default) | Production use |
+| `v2.0-rag-rlm` | Same as main, versioned | Pinning to v2 |
+| `v1.0-rag` | RAG only, no RLM | Simpler setup |
+| `v0.1-stable` | Pure markdown, zero deps | Learning / prototyping |
+
+---
+
+## v2.0 API
+
+```python
+result = agent.ask("What is my name?")
+
+result["answer"]        # the response
+result["route"]         # "RAG" or "RLM"
+result["router_ms"]     # router latency
+result["retrieval_ms"]  # retrieval latency
+result["total_ms"]      # total latency
+result["rag_context"]   # retrieved chunks (RAG path)
+result["rlm_meta"]      # chunk stats (RLM path)
+```
+
+## v2.0 Setup
+
+```python
+agent = HybridAgent(
+    soul_path="SOUL.md",
+    memory_path="MEMORY.md",
+    mode="auto",                    # "auto" | "rag" | "rlm"
+    qdrant_url="...",               # or set QDRANT_URL env var
+    qdrant_api_key="...",           # or QDRANT_API_KEY
+    azure_embedding_endpoint="...", # or AZURE_EMBEDDING_ENDPOINT
+    azure_embedding_key="...",      # or AZURE_EMBEDDING_KEY
+    k=5,                            # RAG retrieval count
+)
+```
+
+Falls back to BM25 (keyword) if Qdrant/Azure not configured.
 
 ---
 
 ## Why not LangChain / LlamaIndex / MemGPT?
 
-Those are powerful frameworks. soul.py is a primitive.
+Those are orchestration frameworks. soul.py is a primitive — persistent identity and memory you can drop into anything you're building.
 
-- **LangChain** — orchestration framework, requires significant setup
-- **LlamaIndex** — document indexing, needs infrastructure
-- **MemGPT** — impressive but opinionated about the full agent stack
-
-soul.py does one thing: give any LLM a persistent identity and memory via files you can read, edit, and version-control yourself. Drop it into whatever you're building.
+- **No framework lock-in** — works with any LLM provider
+- **Human-readable** — SOUL.md and MEMORY.md are plain text
+- **Version-controllable** — git diff your agent's memories
+- **Composable** — use just the parts you need
 
 ---
-
-## Contributing
-
-PRs welcome. The goal is to stay small and composable.
 
 ## License
 
 MIT
 
 ## Citation
-
-If you use soul.py in research:
 
 ```bibtex
 @software{menon2026soul,
