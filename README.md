@@ -141,6 +141,12 @@ Those are orchestration frameworks. soul.py is a primitive — persistent identi
 
 ---
 
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for planned features and how to contribute.
+
+---
+
 ## License
 
 MIT
