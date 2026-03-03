@@ -30,6 +30,7 @@ No database. No server. Just markdown files and smart retrieval.
 | v0.1 | [soul.themenonlab.com](https://soul.themenonlab.com) | Memory persists across sessions |
 | v1.0 | [soulv1.themenonlab.com](https://soulv1.themenonlab.com) | Semantic RAG retrieval |
 | v2.0 | [soulv2.themenonlab.com](https://soulv2.themenonlab.com) | Auto query routing: RAG + RLM |
+| **Ask Darwin** | [soul-book.themenonlab.com](https://soul-book.themenonlab.com) | 📖 Book companion — watch routing decisions live |
 
 ---
 
