@@ -64,6 +64,35 @@ print(result["route"])   # "RAG" or "RLM"
 
 ---
 
+## ☁️ SoulMate API — Managed Cloud Option
+
+Don't want to manage local files? **SoulMate API** gives you persistent memory as a service:
+
+```python
+from soulmate_client import SoulMateClient
+
+# Sign up at soulmate-api-production.up.railway.app/docs
+client = SoulMateClient(
+    api_key="sm_live_...",
+    anthropic_key="sk-ant-..."  # BYOK — your own Anthropic key
+)
+
+# That's it. Memory persists in the cloud.
+response = client.ask("My name is Prahlad.")
+response = client.ask("What's my name?")  # → "Prahlad"
+```
+
+| Local (soul.py) | Cloud (SoulMate API) |
+|---|---|
+| Files on your machine | Managed cloud storage |
+| You control everything | Zero infrastructure |
+| Git-versioned memory | API-based, instant setup |
+| Free forever | Free tier available |
+
+**Get started:** [soulmate-api-production.up.railway.app/docs](https://soulmate-api-production.up.railway.app/docs)
+
+---
+
 ## How it works
 
 soul.py uses two markdown files as persistent state:
