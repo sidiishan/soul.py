@@ -94,8 +94,8 @@ PROVIDER_DEFAULTS = {
         "env_key": "ANTHROPIC_API_KEY",
     },
     "gemini": {
-        "chat_model": "gemini-1.5-flash",
-        "router_model": "gemini-1.5-flash",
+        "chat_model": "gemini-2.0-flash",
+        "router_model": "gemini-2.0-flash",
         "env_key": "GEMINI_API_KEY",
     },
     "openai": {

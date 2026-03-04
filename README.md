@@ -74,8 +74,8 @@ agent = HybridAgent(provider="anthropic")  # Uses ANTHROPIC_API_KEY
 # Google Gemini
 agent = HybridAgent(
     provider="gemini",
-    chat_model="gemini-1.5-pro",      # or gemini-1.5-flash, gemini-2.0-flash
-    router_model="gemini-1.5-flash",  # keep router cheap
+    chat_model="gemini-2.5-pro",       # or gemini-2.0-flash, gemini-2.5-flash
+    router_model="gemini-2.0-flash",   # keep router cheap
 )  # Uses GEMINI_API_KEY
 
 # OpenAI
@@ -92,7 +92,7 @@ agent = HybridAgent(
 | Provider | Default Model | Env Var |
 |----------|---------------|---------|
 | `anthropic` | claude-haiku-4-5 | `ANTHROPIC_API_KEY` |
-| `gemini` | gemini-1.5-flash | `GEMINI_API_KEY` |
+| `gemini` | gemini-2.0-flash | `GEMINI_API_KEY` |
 | `openai` | gpt-4o-mini | `OPENAI_API_KEY` |
 | `openai-compatible` | llama3.2 | `OPENAI_API_KEY` (optional) |
 
