@@ -40,7 +40,7 @@ No database. No server. Just markdown files and smart retrieval.
 pip install soul-agent
 pip install soul-agent[anthropic]
 pip install soul-agent[openai]
-pip install soul-agent[gemini]   # 🔜 Coming soon
+pip install soul-agent[gemini]   # ✅ Now available!
 ```
 
 ## Quickstart
@@ -62,6 +62,39 @@ result = agent.ask("What do you know about me?")
 print(result["answer"])
 print(result["route"])   # "RAG" or "RLM"
 ```
+
+## Multi-Provider Support
+
+soul.py works with **any LLM provider** — no SDK lock-in:
+
+```python
+# Anthropic (default)
+agent = HybridAgent(provider="anthropic")  # Uses ANTHROPIC_API_KEY
+
+# Google Gemini
+agent = HybridAgent(
+    provider="gemini",
+    chat_model="gemini-1.5-pro",      # or gemini-1.5-flash, gemini-2.0-flash
+    router_model="gemini-1.5-flash",  # keep router cheap
+)  # Uses GEMINI_API_KEY
+
+# OpenAI
+agent = HybridAgent(provider="openai")  # Uses OPENAI_API_KEY
+
+# Local via Ollama
+agent = HybridAgent(
+    provider="openai-compatible",
+    base_url="http://localhost:11434/v1",
+    chat_model="llama3.2",
+)
+```
+
+| Provider | Default Model | Env Var |
+|----------|---------------|---------|
+| `anthropic` | claude-haiku-4-5 | `ANTHROPIC_API_KEY` |
+| `gemini` | gemini-1.5-flash | `GEMINI_API_KEY` |
+| `openai` | gpt-4o-mini | `OPENAI_API_KEY` |
+| `openai-compatible` | llama3.2 | `OPENAI_API_KEY` (optional) |
 
 ---
 

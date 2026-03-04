@@ -1,7 +1,7 @@
 """
 soul.py v2.0 — HybridAgent (RAG + RLM)
 Pure REST — no native deps, works on any platform.
-Calls Anthropic API directly via requests.
+Supports Anthropic, Gemini, and OpenAI-compatible APIs.
 """
 import os, sys, time, requests
 from pathlib import Path
@@ -12,7 +12,7 @@ from rlm_memory import RLMMemory
 from router import classify
 
 
-# ── Minimal Anthropic REST client ─────────────────────────────────────────────
+# ── Minimal REST clients ──────────────────────────────────────────────────────
 
 class AnthropicREST:
     """Calls Anthropic API via requests. No SDK needed."""
@@ -35,6 +35,82 @@ class AnthropicREST:
         return r.json()["content"][0]["text"].strip()
 
 
+class GeminiREST:
+    """Calls Google Gemini API via requests. No SDK needed."""
+    BASE = "https://generativelanguage.googleapis.com/v1beta"
+
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    def messages_create(self, model, max_tokens, messages, system=None):
+        # Convert Anthropic-style messages to Gemini format
+        contents = []
+        for m in messages:
+            role = "user" if m["role"] == "user" else "model"
+            contents.append({"role": role, "parts": [{"text": m["content"]}]})
+        
+        payload = {
+            "contents": contents,
+            "generationConfig": {"maxOutputTokens": max_tokens}
+        }
+        if system:
+            payload["systemInstruction"] = {"parts": [{"text": system}]}
+        
+        url = f"{self.BASE}/models/{model}:generateContent?key={self.api_key}"
+        r = requests.post(url, json=payload, timeout=60)
+        r.raise_for_status()
+        return r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+
+class OpenAICompatibleREST:
+    """Calls OpenAI-compatible APIs (OpenAI, Ollama, LM Studio, etc.)"""
+    
+    def __init__(self, api_key, base_url="https://api.openai.com/v1"):
+        self.base_url = base_url.rstrip("/")
+        self.headers = {
+            "Authorization": f"Bearer {api_key}" if api_key else "",
+            "Content-Type": "application/json",
+        }
+
+    def messages_create(self, model, max_tokens, messages, system=None):
+        msgs = []
+        if system:
+            msgs.append({"role": "system", "content": system})
+        msgs.extend(messages)
+        
+        payload = {"model": model, "max_tokens": max_tokens, "messages": msgs}
+        r = requests.post(f"{self.base_url}/chat/completions", 
+                          headers=self.headers, json=payload, timeout=60)
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"].strip()
+
+
+# ── Provider defaults ─────────────────────────────────────────────────────────
+
+PROVIDER_DEFAULTS = {
+    "anthropic": {
+        "chat_model": "claude-haiku-4-5",
+        "router_model": "claude-haiku-4-5",
+        "env_key": "ANTHROPIC_API_KEY",
+    },
+    "gemini": {
+        "chat_model": "gemini-1.5-flash",
+        "router_model": "gemini-1.5-flash",
+        "env_key": "GEMINI_API_KEY",
+    },
+    "openai": {
+        "chat_model": "gpt-4o-mini",
+        "router_model": "gpt-4o-mini",
+        "env_key": "OPENAI_API_KEY",
+    },
+    "openai-compatible": {
+        "chat_model": "llama3.2",
+        "router_model": "llama3.2",
+        "env_key": "OPENAI_API_KEY",
+    },
+}
+
+
 # ── HybridAgent ───────────────────────────────────────────────────────────────
 
 class HybridAgent:
@@ -45,7 +121,11 @@ class HybridAgent:
         soul_path: Path to SOUL.md
         memory_path: Path to MEMORY.md
         mode: "auto" | "rag" | "rlm"
-        anthropic_key: Anthropic API key (or ANTHROPIC_API_KEY env var)
+        provider: "anthropic" | "gemini" | "openai" | "openai-compatible"
+        api_key: API key for the provider (or use env var)
+        base_url: For openai-compatible, the base URL (e.g., http://localhost:11434/v1)
+        chat_model: Model for main chat (defaults per provider)
+        router_model: Model for query routing (defaults per provider)
         qdrant_url, qdrant_api_key: Qdrant credentials (optional, falls back to bm25)
         azure_embedding_endpoint, azure_embedding_key: Azure embeddings (for qdrant mode)
         k: RAG retrieval count
@@ -62,7 +142,9 @@ class HybridAgent:
         soul_path="SOUL.md",
         memory_path="MEMORY.md",
         mode="auto",
-        anthropic_key=None,
+        provider="anthropic",
+        api_key=None,
+        base_url=None,
         qdrant_url=None,
         qdrant_api_key=None,
         azure_embedding_endpoint=None,
@@ -70,26 +152,58 @@ class HybridAgent:
         collection_name="soul_v2_memory",
         k=5,
         rlm_chunk_size=10,
-        chat_model="claude-haiku-4-5",
-        router_model="claude-haiku-4-5",
+        chat_model=None,
+        router_model=None,
+        # Legacy params for backwards compatibility
+        anthropic_key=None,
+        gemini_key=None,
+        openai_key=None,
     ):
         self.soul_path   = Path(soul_path)
         self.memory_path = Path(memory_path)
         self.mode = mode
-        self.chat_model   = chat_model
-        self.router_model = router_model
+        self.provider = provider.lower()
         self._history = []
+
+        # Get provider defaults
+        if self.provider not in PROVIDER_DEFAULTS:
+            raise ValueError(f"Unknown provider: {self.provider}. "
+                           f"Supported: {list(PROVIDER_DEFAULTS.keys())}")
+        
+        defaults = PROVIDER_DEFAULTS[self.provider]
+        self.chat_model = chat_model or defaults["chat_model"]
+        self.router_model = router_model or defaults["router_model"]
+
+        # Resolve API key (check explicit params, then legacy params, then env)
+        key = api_key
+        if not key and self.provider == "anthropic":
+            key = anthropic_key
+        if not key and self.provider == "gemini":
+            key = gemini_key
+        if not key and self.provider in ("openai", "openai-compatible"):
+            key = openai_key
+        if not key:
+            key = os.environ.get(defaults["env_key"], "")
+        
+        if not key and self.provider != "openai-compatible":
+            raise ValueError(f"{defaults['env_key']} not set")
+
+        # Create client
+        if self.provider == "anthropic":
+            self._client = AnthropicREST(key)
+        elif self.provider == "gemini":
+            self._client = GeminiREST(key)
+        elif self.provider == "openai":
+            self._client = OpenAICompatibleREST(key)
+        elif self.provider == "openai-compatible":
+            url = base_url or os.environ.get("OPENAI_BASE_URL", "http://localhost:11434/v1")
+            self._client = OpenAICompatibleREST(key, base_url=url)
 
         # Ensure files exist
         if not self.soul_path.exists():
             self.soul_path.write_text(self.DEFAULT_SOUL)
         if not self.memory_path.exists():
             self.memory_path.write_text("# MEMORY.md\n")
-
-        # Anthropic client
-        key = anthropic_key or os.environ.get("ANTHROPIC_API_KEY","")
-        if not key: raise ValueError("ANTHROPIC_API_KEY not set")
-        self._client = AnthropicREST(key)
 
         # RAG memory
         qd_url = qdrant_url or os.environ.get("QDRANT_URL","")

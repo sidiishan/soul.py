@@ -80,7 +80,7 @@ A standalone PyPI library for auto-generating semantic layers from any database 
 | ✅ | Anthropic Claude | Native support |
 | ✅ | OpenAI | Native support |
 | ✅ | Ollama | OpenAI-compatible API |
-| 🔜 | **Google Gemini** | gemini-pro, gemini-1.5-pro, gemini-1.5-flash |
+| ✅ | **Google Gemini** | gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash (v0.1.6) |
 | 🔲 | LangChain | Memory backend |
 | 🔲 | LlamaIndex | Integration |
 | 🔲 | n8n | Official node |
