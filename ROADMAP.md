@@ -4,18 +4,22 @@ Planned features and improvements for soul.py. PRs welcome!
 
 ---
 
-## 🧬 soul-schema (NEW)
+## 🧬 soul-schema (v0.1.0 SHIPPED! 🎉)
 
 A standalone PyPI library for auto-generating semantic layers from any database — the "portable Unity Catalog."
 
+**Install:** `pip install soul-schema`  
+**Repo:** [github.com/menonpg/soul-schema](https://github.com/menonpg/soul-schema)
+
 | Status | Feature | Notes |
 |--------|---------|-------|
-| 🔜 | PyPI package | `pip install soul-schema` |
-| 🔜 | Multi-database | Postgres, MySQL, SQLite, BigQuery, Snowflake |
-| 🔜 | Auto-descriptions | LLM-powered from metadata |
-| 🔜 | Learning loop | Corrections are remembered |
-| 🔲 | dbt YAML export | schema.yml generation |
-| 🔲 | Vanna export | DDL + docs + examples |
+| ✅ | PyPI package | `pip install soul-schema` |
+| ✅ | Multi-database | Postgres, MySQL, SQLite (any SQLAlchemy) |
+| ✅ | Auto-descriptions | LLM-powered from metadata |
+| ✅ | Learning loop | Locked corrections never overwritten |
+| ✅ | dbt YAML export | `soul-schema export --format dbt` |
+| ✅ | Vanna export | `soul-schema export --format vanna` |
+| ✅ | Air-gapped | Full Ollama support |
 | 🔲 | JOIN inference | Learn relationships from usage |
 
 **Why?** Teams without Unity Catalog need a way to build semantic metadata for Text-to-SQL. soul-schema uses soul.py's memory primitive to remember what columns mean and get smarter over time.
