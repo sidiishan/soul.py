@@ -3,7 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/soul-agent.svg)](https://pypi.org/project/soul-agent/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/soul-agent.svg)](https://pypi.org/project/soul-agent/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Featured on Shipit](https://www.shipit.buzz/api/products/soulpy/badge?theme=dark)](https://www.shipit.buzz/products/soulpy)
+[![Featured on Shipit](https://img.shields.io/badge/Shipit-Featured-6B4FBB?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMiAxNWwtNS01IDEuNDEtMS40MUwxMCAxNC4xN2w3LjU5LTcuNTlMMTkgOGwtOSA5eiIvPjwvc3ZnPg==)](https://www.shipit.buzz/products/soulpy)
 [![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/@menonpg)
 
 **Your AI forgets everything when the conversation ends. soul.py fixes that.**
