@@ -196,6 +196,41 @@ Falls back to BM25 (keyword) if Qdrant/Azure not configured.
 
 ---
 
+## 📚 Knowledge Bases + Memory
+
+soul.py isn't just for personal memory — the same architecture works for custom knowledge bases. Combine both in a single agent:
+
+```python
+agent = HybridAgent(
+    soul_path="SOUL.md",
+    memory_path="MEMORY.md",        # Per-user memory
+    knowledge_dir="./knowledge",     # Your corpus (docs, products, policies)
+)
+
+# Index your knowledge base once
+agent.index_knowledge()
+
+# Now the agent searches both pools
+agent.ask("What's the return policy?")         # → Knowledge base
+agent.ask("What was I asking about earlier?")  # → User memory
+agent.ask("Which product fits my needs?")      # → Both
+```
+
+**Example use cases:**
+
+| Agent Type | Knowledge Base | Memory |
+|------------|---------------|--------|
+| **Support Bot** | Product docs, policies, FAQs | Customer history, preferences |
+| **Research Assistant** | Paper corpus, methodologies | User's focus, papers read |
+| **Onboarding Buddy** | Company handbook, org chart | New hire's role, questions |
+| **Book Companion** | Full book content | Reader's interests, progress |
+
+Darwin (the AI companion for the Soul book) uses exactly this pattern — the entire book indexed as knowledge, plus per-reader conversation memory.
+
+See the [Memory Architecture Patterns](https://github.com/menonpg/soul-book) guide for detailed implementation patterns.
+
+---
+
 ## Why not LangChain / LlamaIndex / MemGPT?
 
 Those are orchestration frameworks. soul.py is a primitive — persistent identity and memory you can drop into anything you're building.
