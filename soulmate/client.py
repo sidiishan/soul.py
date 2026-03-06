@@ -152,6 +152,38 @@ class SoulMateClient:
         """
         return self._request("DELETE", f"/v1/memory/{customer_id}")
     
+    def reset_memory(self, customer_id: str) -> Dict[str, Any]:
+        """
+        Reset/clear all memory for a customer session.
+        
+        Use this when starting a fresh conversation flow or when the user
+        explicitly requests to "start over" or "forget everything."
+        This is a clean alias for delete_memory, intended for session
+        management use cases rather than compliance workflows.
+        
+        Args:
+            customer_id: Unique identifier for the customer/user
+            
+        Returns:
+            Confirmation of memory reset
+        """
+        return self.delete_memory(customer_id)
+    
+    def memory_stats(self, customer_id: str) -> Dict[str, Any]:
+        """
+        Get memory statistics for a customer without retrieving full content.
+        
+        Returns entry count and approximate size, useful for monitoring
+        memory growth or deciding when to summarize/prune.
+        
+        Args:
+            customer_id: Unique identifier for the customer/user
+            
+        Returns:
+            Dictionary with 'entry_count' and 'size_bytes' keys
+        """
+        return self._request("GET", f"/v1/memory/{customer_id}/stats")
+    
     def upload_soul(
         self,
         soul_id: str,
