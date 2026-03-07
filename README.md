@@ -7,7 +7,7 @@
 [![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/@menonpg)
 [![Amazon Book](https://img.shields.io/badge/📚_Book-Amazon-FF9900?logo=amazon&logoColor=white)](https://a.co/d/02T0WadG)
 
-[![Star History Chart](https://api.star-history.com/svg?repos=menonpg/soul.py&type=Date)](https://star-history.com/#menonpg/soul.py&Date)
+[![Star History](https://starchart.cc/menonpg/soul.py.svg)](https://starchart.cc/menonpg/soul.py)
 
 **Your AI forgets everything when the conversation ends. soul.py fixes that.**
 
