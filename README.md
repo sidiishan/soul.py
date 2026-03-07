@@ -7,6 +7,8 @@
 [![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/@menonpg)
 [![Amazon Book](https://img.shields.io/badge/📚_Book-Amazon-FF9900?logo=amazon&logoColor=white)](https://a.co/d/02T0WadG)
 
+[![Star History Chart](https://api.star-history.com/svg?repos=menonpg/soul.py&type=Date)](https://star-history.com/#menonpg/soul.py&Date)
+
 **Your AI forgets everything when the conversation ends. soul.py fixes that.**
 
 > 📖 **NEW: The book is out!** *Soul: Building AI Agents That Remember Who They Are* — everything here + deep dives on identity, memory patterns, multi-agent coordination, and the philosophy of persistent AI. **[Get it on Amazon →](https://a.co/d/02T0WadG)**
