@@ -32,6 +32,7 @@ A standalone PyPI library for auto-generating semantic layers from any database 
 |--------|---------|-------|
 | ✅ | Qdrant | Current default |
 | ✅ | ChromaDB | Local, zero-config (v0.1.2) |
+| 🔜 | **RuVector** | Self-learning GNN vector DB — results improve per query, tamper-proof audit chain, graph queries, MIT/free — [github.com/ruvnet/ruvector](https://github.com/ruvnet/ruvector) |
 | 🔲 | pgvector | PostgreSQL native |
 | 🔲 | FAISS | Local, fast |
 | 🔲 | Pinecone | Cloud hosted |
